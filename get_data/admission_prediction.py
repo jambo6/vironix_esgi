@@ -54,7 +54,7 @@ def create_influenza_labels(frame: pd.DataFrame) -> pd.DataFrame:
     )
     frame["label"] = frame[["influenza", "cc_influenza"]].max(axis=1)
     frame.drop(["influenza", "cc_influenza"], axis=1, inplace=True)
-    frame['label'] = frame['label'].astype(int)
+    frame["label"] = frame["label"].astype(int)
     return frame
 
 
@@ -63,6 +63,7 @@ def create_splits(
     ratios: Tuple[float, float, float] = (0.4, 0.4, 0.2),
     shuffle: bool = True,
     stratify: bool = True,
+    random_state: int = 1,
 ) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     """Creates three splits for the data according to the specified ratios.
 
@@ -72,6 +73,7 @@ def create_splits(
         shuffle: Whether to first shuffle the dataset.
         stratify: Whether to stratify the splits. If this is set, there must be a column called 'label' that will be
             stratified on.
+        random_state: Seed for reproducibility.
 
     Returns:
         Three dataframes that have been split according to the corresponding sizes.
@@ -81,20 +83,30 @@ def create_splits(
 
     # Perform the first split to get the test data
     inner_frame, frame_3 = train_test_split(
-        frame, train_size=sum(ratios[:-1]), test_size=ratios[-1], stratify=stratify_indexes, shuffle=shuffle
+        frame,
+        train_size=sum(ratios[:-1]),
+        test_size=ratios[-1],
+        stratify=stratify_indexes,
+        shuffle=shuffle,
+        random_state=random_state,
     )
 
     # Perform the statistical/train split
     if stratify:
         stratify_indexes = inner_frame["label"]
     frame_1, frame_2 = train_test_split(
-        inner_frame, train_size=ratios[0], test_size=ratios[1], stratify=stratify_indexes, shuffle=shuffle
+        inner_frame,
+        train_size=ratios[0],
+        test_size=ratios[1],
+        stratify=stratify_indexes,
+        shuffle=shuffle,
+        random_state=random_state,
     )
 
     return frame_1, frame_2, frame_3
 
 
-def create_statistical_table(frame: pd.DataFrame, mode='mean_std') -> pd.DataFrame:
+def create_statistical_table(frame: pd.DataFrame, mode="mean_std") -> pd.DataFrame:
     """Creates a table of statistics from an ML-feature style dataframe with label conditioning.
 
     The conditioned column MUST be called 'label'.
@@ -107,9 +119,9 @@ def create_statistical_table(frame: pd.DataFrame, mode='mean_std') -> pd.DataFra
         A dataframe that contains features as rows and conditioned column split as the columns. Entries are the
         statistics.
     """
-    label_grouped = frame.groupby('label')
+    label_grouped = frame.groupby("label")
 
-    if mode == 'mean_std':
+    if mode == "mean_std":
         mean, std = label_grouped.mean().T, label_grouped.std().T
         mean.columns = ["{}.mean".format(x) for x in mean.columns]
         std.columns = ["{}.std".format(x) for x in std.columns]
@@ -117,7 +129,7 @@ def create_statistical_table(frame: pd.DataFrame, mode='mean_std') -> pd.DataFra
         # Make the frame
         frame_stat = pd.concat((mean, std), axis=1)
         frame_stat = frame_stat[sorted(frame_stat.columns)]
-    elif mode == 'proba':
+    elif mode == "proba":
         raise NotImplementedError("Need to decide how to handle continuous variables before this works.")
     else:
         raise NotImplementedError("Statistical tables are implemented only for ('mean_std', 'proba') methods.")
@@ -147,12 +159,10 @@ if __name__ == "__main__":
     frame_stat, frame_train, frame_test = create_splits(subframe, stratify=True)
 
     # Save the information to the processed directory
-    group_with_name = [('frame_stat', frame_stat), ('frame_train', frame_train), ('frame_test', frame_test)]
+    group_with_name = [("frame_stat", frame_stat), ("frame_train", frame_train), ("frame_test", frame_test)]
     for name, f in group_with_name:
-        f.to_csv(PROCESSED_DIR / '{}.csv'.format(name))
+        f.to_csv(PROCESSED_DIR / "{}.csv".format(name))
 
     # Finally create a statistical table from the frame_stat data
     stat_table = create_statistical_table(frame_stat)
-    stat_table.to_csv(PROCESSED_DIR / 'frame_stat_table.csv')
-
-
+    stat_table.to_csv(PROCESSED_DIR / "frame_stat_table.csv")
