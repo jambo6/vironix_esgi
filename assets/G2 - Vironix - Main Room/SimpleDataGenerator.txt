@@ -1,0 +1,97 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Mon Jun 14 14:46:20 2021
+
+@author: hreed
+"""
+import numpy as np
+import random as rnd
+
+
+
+def generate_data(cases, col, prob):
+    '''
+    
+    Parameters
+    ----------
+    cases : A matrix of cases where each row is an individual 
+    and each column is a feature 
+    col : The column of the feature we are generating values for
+    prob : the probability that an individual has the feature represented 
+    in column col given their severity (note the severity is prespecified)
+
+    Returns
+    -------
+    A matrix of cases where each row is an individual 
+    and each column is a feature.  
+
+    '''
+    
+    # we traverse through the matrix columns
+    for i in range(len(cases[:,0])):
+        # Generate a random number between 0 and 1
+        rand = rnd.random()
+        if rand <= prob:
+            cases[i,col] = 1
+        else:
+            cases[i,col] = 0
+    
+    return cases
+
+
+
+ 
+##########################
+# Example of use 
+##########################    
+    
+# Number of cases for each severity :
+mild = 100
+moderate = 100
+severe = 100
+
+# Number of features we are considering
+n = 5
+
+# Probability matrix for feature bases on severity:
+# prob[i,j] will be the probability of having feature j given you have severity i
+prob = np.array([
+    [.1, .2, .5, .2, .1],
+    [.4, .5, .5, .3, .8],
+    [.7, .8, .6, .7, .9]
+    ])
+
+# We generate a matrix for each severity type:
+    # Each row is an individual
+    # Each column specifies if the feature is present or not (binary)
+
+# Here we generate the mild cases set
+mild_cases = np.zeros((mild, n))
+for i in range(n):
+    generate_data(mild_cases, i, prob[0,i])
+
+# Here we generate the mild cases set
+moderate_cases = np.zeros((moderate, n))
+for i in range(n):
+    generate_data(moderate_cases, i, prob[1,i])   
+    
+# Here we generate the mild cases set
+severe_cases = np.zeros((severe, n))
+for i in range(n):
+    generate_data(severe_cases, i, prob[2,i])
+
+
+
+
+print("Mild Cases:")
+print(mild_cases)
+
+print("Moderate Cases:")
+print(moderate_cases)
+
+print("Severe Cases:")
+print(severe_cases)
+
+
+
+

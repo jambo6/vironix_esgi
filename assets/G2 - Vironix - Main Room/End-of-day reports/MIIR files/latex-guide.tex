@@ -1,0 +1,1059 @@
+% This is file miirguide2.tex
+% release v1.0, 1 January 2021
+%   (based on ejm2egui.tex v 1.02, JFM2egui.tex v1.13 for LaTeX 2e
+%         and EJMguide.tex v0.2 for LaTeX 2.09)
+% Copyright (C) 1998,1999,2000, 2021 Cambridge University Press
+
+\NeedsTeXFormat{LaTeX2e}
+
+% The following saves the original definitions of \geq and \leq (guide only).
+\let\realgeq\geq
+\let\realleq\leq
+
+\documentclass{MIIR}
+\usepackage{amsmath,amsthm}
+\usepackage{graphicx}
+\usepackage{floatpag}
+\usepackage{float}
+\usepackage{xcolor}
+\usepackage[colorlinks=true,linkcolor=blue]{hyperref}
+
+\usepackage{tikz,pgfplots} %required for tikz plots
+\pgfplotsset{compat=1.3}
+\usetikzlibrary{external}
+\tikzexternalize[prefix=tikz/]
+\usepackage[numbers]{natbib}
+
+%%% Macros for the guide only %%%
+\newcommand\lra{\ensuremath{\quad\longrightarrow\quad}}
+\newcommand\rch[1]{\lra\rlap{$#1$}\hspace{1em}}
+
+% The following adds 6pt of space around verbatim environments.
+\let\realverbatim=\verbatim
+\let\realendverbatim=\endverbatim
+\renewcommand\verbatim{\par\addvspace{6pt plus 2pt minus 1pt}\realverbatim}
+\renewcommand\endverbatim{\realendverbatim\addvspace{6pt plus 2pt minus 1pt}}
+%%% End of macros for the guide %%%
+
+
+
+
+
+%%% Example macros (some are not used in this sample file) %%%
+
+% For units of measure
+\newcommand\dynpercm{\nobreak\mbox{$\;$dynes\,cm$^{-1}$}}
+\newcommand\cmpermin{\nobreak\mbox{$\;$cm\,min$^{-1}$}}
+
+% Various bold symbols
+\providecommand\bnabla{\boldsymbol{\nabla}}
+\providecommand\bcdot{\boldsymbol{\cdot}}
+\providecommand\bomega{\boldsymbol{\omega}}
+\newcommand\biS{\boldsymbol{S}}
+\newcommand\etb{\boldsymbol{\eta}}
+\newcommand\bldP{\boldsymbol{P}}
+
+% For multiletter symbols
+\newcommand\Real{\mbox{Re}} % cf plain TeX's \Re and Reynolds number
+\newcommand\Imag{\mbox{Im}} % cf plain TeX's \Im
+\newcommand\Rey{\mbox{\textit{Re}}}  % Reynolds number
+\newcommand\Pran{\mbox{\textit{Pr}}} % Prandtl number, cf TeX's \Pr product
+\newcommand\Pen{\mbox{\textit{Pe}}}  % Peclet number
+\newcommand\Ai{\mbox{Ai}}            % Airy function
+\newcommand\Bi{\mbox{Bi}}            % Airy function
+
+
+\newcommand\ssC{\mathsf{C}}    % for sans serif C
+\newcommand\sfsP{\mathsfi{P}}  % for sans serif sloping P
+\newcommand\slsQ{\mathsfbi{Q}} % for sans serif bold-sloping Q
+
+% Hat position
+\newcommand\hatp{\skew3\hat{p}}      % p with hat
+\newcommand\hatR{\skew3\hat{R}}      % R with hat
+\newcommand\hatRR{\skew3\hat{\hatR}} % R with 2 hats
+\newcommand\doubletildesigma{\skew2\tilde{\skew2\tilde{\Sigma}}}
+%       italic Sigma with double tilde
+
+% array strut to make delimiters come out right size both ends
+\newsavebox{\astrutbox}
+\sbox{\astrutbox}{\rule[-5pt]{0pt}{20pt}}
+\newcommand{\astrut}{\usebox{\astrutbox}}
+
+\newcommand\GaPQ{\ensuremath{G_a(P,Q)}}
+\newcommand\GsPQ{\ensuremath{G_s(P,Q)}}
+\newcommand\p{\ensuremath{\partial}}
+\newcommand\tti{\ensuremath{\rightarrow\infty}}
+\newcommand\kgd{\ensuremath{k\gamma d}}
+\newcommand\shalf{\ensuremath{{\scriptstyle\frac{1}{2}}}}
+\newcommand\sh{\ensuremath{^{\shalf}}}
+\newcommand\smh{\ensuremath{^{-\shalf}}}
+\newcommand\squart{\ensuremath{{\textstyle\frac{1}{4}}}}
+\newcommand\thalf{\ensuremath{{\textstyle\frac{1}{2}}}}
+\newcommand\Gat{\ensuremath{\widetilde{G_a}}}
+\newcommand\ttz{\ensuremath{\rightarrow 0}}
+\newcommand\ndq{\ensuremath{\frac{\mbox{$\partial$}}{\mbox{$\partial$} n_q}}}
+\newcommand\sumjm{\ensuremath{\sum_{j=1}^{M}}}
+\newcommand\pvi{\ensuremath{\int_0^{\infty}}}%
+
+\newcommand\etal{\mbox{\textit{et al.}}}
+\newcommand\eg{e.g.\ }
+\providecommand\AMSLaTeX{AMS\,\LaTeX}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]   %%number by section
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem*{corollary*}{Corollary}  %% unnumbered
+
+ \theoremstyle{definition}
+ \newtheorem{definition}[theorem]{Definition}
+ \newtheorem{problem}[theorem]{Problem}
+ \newtheorem{example}[theorem]{Example}
+ \newtheorem*{problem*}{Problem}    %% unnumbered
+ \newtheorem*{example*}{Example}
+  
+  
+\title[Guide for Mathematics in Industry Reports]{\LaTeXe\ %
+         Guide for Mathematics in Industry Reports}
+
+
+\author[Tranah et al.]{%
+  D.A. Tranah$\,^1$\thanks{Corresponding Author: {\tt dtranah@cambridge.org}},\ls
+  W. Weierstrass$\,^2$\thanks{Thanks to S. Schmidt for assistance}\ls
+\and
+  Z. Zhang$\,^3$\thanks{Now at Engines Plc, Beihai, China}
+}
+
+\affiliation{%
+  $^1\,$Cambridge University Press, Cambridge, UK\\
+    $^2\,$University of Harford, Harford, USA\\
+  $^3\,$Allgemeine Industrials, Frankburg, Germany}
+  
+\date{\today}
+\pubyear{2021}
+\issue{\SG}
+\pagerange{\pageref{firstpage}--\pageref{lastpage}}
+
+%\acceptedtrue
+
+\begin{document}
+
+\label{firstpage}
+\maketitle
+
+\begin{footnotesize}
+
+\begin{studygroup}
+This is the name of the Study Group. Include identifier (for example ESGI and number), series name (if any), location and date.
+\end{studygroup}
+
+\begin{communicated}
+Give here the name of the Study Group organiser.
+\end{communicated}
+
+\begin{partner}
+Give the name here of the industrial or business partner and a url if required.
+\end{partner}
+
+\begin{presenter}
+Include the name of the individual(s) who proposed the problem, and address if required.
+\end{presenter}
+
+
+\begin{team}
+List here all team members in alphabetical order who contributed to the solution of the problem, e.g.\\
+A.N. Contributor1, Affiliation1;
+A.N. Contributor2, Affiliation2;
+A.N. Contributor3, Affiliation3.\\
+Team members are not necessarily the same as authors. See \S\ref{authors}.
+\end{team}
+
+\begin{application}
+Include the main industrial/business application area from one of the following categories (also available from the \href{https://www.cambridge.org/engage/miir/public-dashboard}{MIIR} site):
+Aerospace;
+Agriculture/Fisheries;
+Biomedical/Healthcare;
+Charities;
+Chemical;
+Communications/Networks;
+Computing/Robotics;
+Construction;
+Data Analysis;
+Defence;
+Electronics;
+Energy/Utilities;
+Environment;
+Finance;
+Food and Drink;
+Government;
+Logistics;
+Manufacturing;
+Materials processing;
+Mechanics;
+Pharmaceutical;
+Retail;
+Social;
+Sports;
+Textile/Clothing/Footwear;
+Transport.
+\end{application}
+
+\begin{tools}
+Include the main mathematical tools and models used to tackle the problem.
+\end{tools}
+
+
+\begin{keywords}
+Include up to five `key subject categories', listed in order of importance.
+\end{keywords}
+
+
+\begin{MSC2020}
+Include up to five two-level subject codes, listed in order of importance, taken from the Mathematics Subject Classification
+(see \href{https://mathscinet.ams.org/msnhtml/msc2020.pdf}{MSC2020}).
+\end{MSC2020}
+\end{footnotesize}
+%\clearpage
+
+
+
+
+\maketitle
+
+\summary{This guide is for authors who are preparing submissions for the
+\emph{Mathematics in Industry Reports}
+using the \LaTeXe\ document preparation system and the Cambridge
+University Press MIIR class file. It should be used as a template for your report.}
+
+
+\section{Introduction}
+
+The layout for \emph{Mathematics in Industry Reports} has been
+implemented as a \LaTeXe\ class file. The MIIR class is based on the article.cls.
+Commands which differ from  standard \LaTeX, or which are
+provided in addition to it, are explained in this
+guide. This guide is not a substitute for the \LaTeX\ manual itself.
+
+Please do not call in unnecessary packages. Not only is it bad style,  but they may interfere with
+packages that are required in the class file.
+
+
+\subsection{General style issues}
+
+Use of \LaTeX\ defaults will result in a pleasing uniformity of layout
+and font selection. Authors should resist the temptation to make
+\emph{ad hoc} changes to these. Also avoid use of direct formatting unless
+really necessary. 
+
+If you have written your report using article.cls, then remove hard breaks before converting to MIIR.cls
+as the page and line lengths are different.
+
+The language used 
+can be either British or American English, provided it's consistent within each report.
+
+Enunciations (i.e. Theorems, examples, etc.), should you wish them, are handled using amsthm.sty. You therefore need to call in both amsmath.sty and amsthm.sty, \emph{in that order} in the root file, as they are not called by the class file. 
+See \S\ref{sectTheor}.
+We recommend calling  hyperref.sty in your root file to enable live links within a document. Add a \verb"\label" to anything that you refer to and use \verb"\ref",  \verb"\href" and \verb"\cite"
+commands when referencing or citing  items. See \S\ref{refs}.
+To keep things simple we recommend using natbib.sty to handle reference lists and citations. Include the command \verb"\usepackage[numbers]{natbib}" in the root file so that everything is numbered.
+
+The MIIR.cls file specifies how other things, such as sections or equations, will be numbered. 
+
+
+
+
+\subsection{Submission of Reports}
+
+Authors who intend to submit a report should obtain a copy of the
+MIIR class file from the submission site.
+You will also find there this guide; you can use it as a template for your report.
+
+You should submit a pdf of the final version of your report created in \LaTeX\ using the MIIR class file.
+
+
+
+\section{Using the MIIR class file}
+
+First, copy the file \verb"MIIR.cls"  into the correct subdirectory on your system.
+\verb"MIIR.cls"  is a complete document class, and
+\emph{not} a class option; thus,
+if you're familiar with the standard article class then simply replace \verb"article"  with \verb"MIIR" in the
+\verb"\documentclass" command at the beginning of your report. Do \emph{not} include any optional arguments that specify the font size.
+
+
+Author-defined macros should be inserted before \verb"\begin{document}".
+You\emph{ must not} change any of the macro definitions
+or parameters in \verb"MIIR.cls".
+
+\subsection{Document class options}\label{sec:ClassOp}
+
+In general, the following standard document class options should \emph{not} be
+used with \verb"MIIR.cls":
+%
+\begin{itemize}
+  \item \texttt{10pt}, \texttt{11pt} and \texttt{12pt} -- unavailable;
+  \item \texttt{twoside} is the default (\texttt{oneside} is disabled);
+  \item \texttt{onecolumn} is the default (\texttt{twocolumn} is disabled);
+  \item \texttt{titlepage} is not required and is disabled; \verb"\maketitle" creates the title page;
+  \item \texttt{abstract} is not required and has been disabled. See \S\ref{abstract} below.
+  \item \texttt{fleqn} and \texttt{leqno} should not be used, and are disabled.
+\end{itemize}
+
+\subsection{Additional packages required for \texttt{MIIR.cls}}
+\label{sec:adpkg}
+The following additional package (i.e., \verb".sty" files) are required but are not supplied: they can
+be loaded from your local \LaTeX\ installation or downloaded from the eb, e.g. from a CTAN site.
+
+\begin{itemize}
+    \item \verb"amsmath, amsfonts, amsthm" -- required for standard fonts and environments.
+    \item \verb"natbib" -- required for reference lists and citations to it.
+    \item \verb"graphicx, floatpag, float" -- required for figures and floats.
+    \item \verb"hyperref" is not required but is strongly recommended as it menas you can create internal and external links.
+\end{itemize}
+
+
+\section{Extras}
+
+In addition to all of the standard \LaTeX\ design elements, \verb"MIIR.cls"  
+includes the following features:
+\begin{itemize}
+  \item Extended commands for specifying a short version
+        of the title and author(s) for the running
+        headlines.
+  \item Control of enumerated lists.
+  \item Various `metadata' environments: {\tt communicated}, {\tt keywords}, {\tt application}, {\tt MSC2020}, {\tt studygroup}, {\tt presenter}, {\tt partner}, {\tt team}, {\tt tools}, all of which are illustrated on page 1 of this guide.
+  \item A {\tt summary} environment, which should begin the report proper.
+  \item An {\tt acknowledgments} environment.
+  \item Extensions of the {\tt proof} environment.
+\end{itemize}
+Once you have used any of these additional facilities in your document,
+it can only be processed with \verb"MIIR.cls".
+
+\section{Title page}
+\subsection{Title}
+In the MIIR style, the title of the report and the author name(s)
+are used both at the beginning of the report for the main title and
+throughout the report as running heads at the top of every page.
+The title, or a short version of it, is used on odd-numbered pages (rectos) and the author name
+appears on even-numbered pages
+(versos). The \verb"\pagestyle" and \verb"\thispagestyle" commands should
+\emph{not} be used.  Similarly, the commands \verb"\markright" and
+\verb"\markboth" should not be necessary.
+
+Although the report title can run to several lines of text,
+the running head must be a single line.
+Additionally, the title can also incorporate kine break commands
+(\eg \verb"\\") but these are not acceptable in a running head.
+To enable you to specify an alternative short title, the
+standard \verb"\title" 
+%and \verb"\author"
+ command has been extended to take
+an optional argument to be used as the running head:
+%
+\begin{verbatim}
+  \title[A short title]{The full title which can be as long as necessary}
+\end{verbatim}
+
+
+\subsection{Authors and Team}\label{authors}
+
+\paragraph{Authors}
+Only those people who have contributed to the actual writing of the report should be listed as authors. 
+
+As with the recto running head, the verso must also be only a single line. Therefore the \verb"\author" command also includes an optional argument which should just consist of the family name(s), like so:
+
+\begin{verbatim}
+ \author[Last names of authors]{The full names of all the authors, 
+               using letterspacing (the command \ls) and  
+               \and before the final name in the list}
+\end{verbatim}
+
+
+Note: If there are three or more authors of your report, the optional argument should contain the first author's name followed by `et al.'.
+
+Names will automatically appear in small caps, so only use upper case letters for initials and the first  letter of the family name(s).
+
+Author affiliations must be entered using
+the \verb"\affiliation" command as shown below.   
+
+The following example shows how. Note that you have to insert the affiliation footnote
+numbers manually. 
+
+%
+\begin{verbatim}
+\author[Tranah et al.]{%
+  D.A. Tranah$\,^1$\thanks{Corresponding Author: {\tt dtranah@cambridge.org}},\ls
+  W. Weierstrass$\,^2$\thanks{Thanks to S. Schmidt for assistance}\ls
+\and
+  Z. Zhang$\,^3$\thanks{Now at Engines Plc, Hamstadt, Germany}
+}
+
+\affiliation{%
+  $^1\,$Cambridge University Press, Cambridge, UK\\
+    $^2\,$University of Harford, Harford, USA\\
+  $^3\,$Allgemeine Industrials, Frankburg, Germany}
+  \end{verbatim}
+%
+The \LaTeX\ \verb"\thanks" command, to be used inside the \verb"\author" command, produced here the detials of the coresponding author, 
+a personal acknoweldgement and an author's `current address'  as footnotes on the title page, but it could also be used for other details, as appropriate.
+
+\paragraph{Team}
+The full list of those contributing to the study group problem should be given within the `team' environment (see below).
+
+\subsection{Other information}
+
+Also required, as appropriate, on the title page is information about the Study Group (the `studygroup' environment),  the Study Group organiser responsible for the report (`communicated'), the name of the industrial or business partner (`partner'), the name(s) of the individual(s) who contributed the problem (`presenter'), the names of members of the team who worked on the problem addressed in the report (`team'), the industrial application area (`application'), tools and models used to tackle the problem (`tools'),  keywords (`keywords'), and 
+MSC2020 codes (`MSC2020'), in that order.  Explicitly:
+
+\begin{verbatim}
+
+\begin{studygroup}
+...
+\end{studygroup}
+
+\begin{communicated}
+...
+\end{communicated}
+
+\begin{partner}
+...
+\end{partner}
+
+\begin{presenter}
+...
+\end{presenter}
+
+\begin{team}
+...
+\end{team}
+
+\begin{application}
+...
+\end{application}
+
+\begin{tools}
+...
+\end{tools}
+
+\begin{keywords}
+...
+\end{keywords}
+
+\begin{MSC2020}
+...
+\end{MSC2020}
+\end{verbatim}
+
+
+\subsection{Summary}\label{abstract}
+Please include at the start of the report a summary, no longer than 150 words,
+ using the  \verb"\summary" command, like so:
+
+\begin{verbatim}
+\summary{This is a summary of the paper in less than 150 words.}
+\end{verbatim}
+
+You will need to use the same text in the `Abstract' box on the submission page.
+
+
+\section{Lists}
+
+The MIIR style provides the three standard list environments:
+\begin{itemize}
+  \item Numbered lists, created using the \verb"enumerate" environment.
+  \item Bulleted lists, created using the \verb"itemize" environment.
+  \item Labelled lists, created using the \verb"description" environment.
+\end{itemize}
+The \verb"enumerate" environment numbers each list item with an arabic
+number in parentheses; alternative styles can be achieved by inserting
+a redefinition of the number labelling command after the
+\verb"\begin{enumerate}". For example, a list numbered with roman numerals
+inside parentheses can be produced by the following commands:
+%
+\begin{verbatim}
+  \begin{enumerate}[(iii)]
+  \renewcommand{\theenumi}{\roman{enumi}}
+  \item first item
+         :
+  \end{enumerate}
+\end{verbatim}
+The optional argument contains the widest `number' so that alignment of the numbers is correct. 
+
+
+\section{Enunciation and and Proof environments}\label{sectTheor}
+
+\subsection{Enunciations}
+
+The amsthm package provides a standard way of allowing varying types of theorem-like enunciations to
+be laid out differently but consistently, and to be numbered automatically within
+a numbering system of your choice; and it's easy to implement. We don't include it within the .cls file, but
+suggest you call it
+include near top of the root file the following lines, for example:
+
+\verb"  \documentclass{"\texttt{MIIR}\verb"}"\\
+\verb"  \usepackage{amsmath}"\\
+\verb"  \usepackage{amsthm}"\\[0.5\baselineskip]
+Note that \verb"amsmath.sty" \emph{must} precede \verb"amsthm.sty".
+
+Layout of enunciations is determined by the \verb"\theoremstyle" command
+given in the preamble of the root file. If no style is specified, it will default to \texttt{plain}.
+To specify a different style (we only recommend plain and definition styles),
+divide your \verb"\newtheorem" commands
+into two groups and preface each one with the appropriate \verb"\theoremstyle".
+Enunciations can be numbered or unnumbered.
+
+\paragraph{amsthm \texttt{plain} style}
+The \texttt{plain} style is normally used for theorems, lemmas,
+corollaries, propositions, and conjectures. These can be numbered or unnumbered. The text of the enunciation will be typeset in italic.
+
+\paragraph{amsthm \texttt{definition} style}
+The \texttt{definition} style is used for definitions,
+remarks, notation, conditions, problems, examples, problems, projects or other such items that might need to be set off and numbered. The text of the enunciation will be typeset in roman.
+
+
+Our preferred style is that enunciations should be numbered in a single
+sequence either by report (thus, Definition~1, Lemma~2,
+Example~3), or by section (thus, Definition~1.1, Lemma~1.2, 
+Example~2.1): this helps navigation. 
+It's good style only to number things that are refered to. 
+
+The example below illustrates the use of both styles, in numbered and unnumbered form.
+The following code sets up the style and the numbering system. Here's how to number by section.
+
+\begin{verbatim}
+  \theoremstyle{plain}% default
+  \newtheorem{theorem}{Theorem}[section]  %%number by section
+  \newtheorem{lemma}[theorem]{Lemma}
+  \newtheorem*{corollary*}{Corollary}  %% unnumbered
+
+  \theoremstyle{definition}
+  \newtheorem{definition}[theorem]{Definition}
+ \newtheorem{problem}[theorem]{Problem}
+  \newtheorem{example}[theorem]{Example}
+  \newtheorem*{problem*}{Problem}    %% unnumbered
+  \newtheorem*{example*}{Example}  %% unnumbered
+\end{verbatim}
+
+
+Here's how to number by report.
+\begin{verbatim}
+  \theoremstyle{plain}% default
+  \newtheorem{theorem}{Theorem}  %%number by article
+  \newtheorem{lemma}[theorem]{Lemma}
+  \newtheorem*{corollary*}{Corollary}  %% unnumbered
+
+  \theoremstyle{definition}
+  \newtheorem{definition}[theorem]{Definition}
+ \newtheorem{problem}[theorem]{Problem}
+  \newtheorem{example}[theorem]{Example}
+  \newtheorem*{problem*}{Problem}    %% unnumbered
+  \newtheorem*{example*}{Example}  %% unnumbered
+\end{verbatim}
+
+Here are some examples
+
+%
+\begin{verbatim}
+  \begin{problem}
+  This gives me a normal numbered problem.
+  \end{problem}
+  \begin{example*}
+  This gives me an unnumbered example heading.
+  \end{example*}
+\end{verbatim}
+%
+which produces:
+
+  \begin{problem}
+  This gives me a normal numbered problem.
+  \end{problem}
+  \begin{example*}[My heading]
+  This gives me an unnumbered but named, example heading.
+  \end{example*}
+%
+
+\smallskip
+In order to allow
+authors maximum flexibility in numbering and naming, \emph{no} theorem-like
+environments are defined in \verb"MIIR.cls". Rather, you have to define
+each one yourself, as above.
+
+\subsection{Proofs}
+ \label{proofs}
+The \verb"proof" environment is included in the
+amsthm package and provides a consistent format for proofs.  An analogous command, \verb"\solution", is included in the MIIR.class file and draws on it.
+
+ For example,
+\begin{verbatim}
+  \begin{proof}\ 
+    Use $K_\lambda$ and $S_\lambda$ to translate combinators
+    into $\lambda$-terms. For the converse, translate
+    $\lambda x$ \ldots by [$x$] \ldots and use induction
+    and the lemma.
+  \end{proof}
+\end{verbatim}
+produces the following:
+  \begin{proof}\ 
+    Use $K_\lambda$ and $S_\lambda$ to translate combinators
+    into $\lambda$-terms. For the converse, translate
+    $\lambda x$ \ldots\ by [$x$] \ldots\ and use induction
+    and the lemma.
+  \end{proof}
+  
+  Similarly
+  \begin{verbatim}
+  \solution{
+    Use $K_\lambda$ and $S_\lambda$ to translate combinators
+    into $\lambda$-terms. For the converse, translate
+    $\lambda x$ \ldots\ by [$x$] \ldots\ and use induction
+    and the lemma.}
+ \end{verbatim}
+yields
+\solution{
+    Use $K_\lambda$ and $S_\lambda$ to translate combinators
+    into $\lambda$-terms. For the converse, translate
+    $\lambda x$ \ldots\ by [$x$] \ldots\ and use induction
+    and the lemma.}
+ 
+
+\paragraph{Adapting the `Proof' heading}
+An optional argument allows you to have a different
+name from the simple `Proof'. For example, to change the heading
+to read `Proof of the Pythagorean Theorem', key the following:
+
+\begin{verbatim}
+  \begin{proof}[Proof of the Pythagorean Theorem]
+    Start with a generic right-angled triangle \ldots
+  \end{proof}
+\end{verbatim}
+
+It produces:
+  \begin{proof}[Proof of the Pythagorean Theorem]\ 
+    Start with a generic right-angled triangle \ldots
+  \end{proof}
+
+\paragraph{Typesetting a Proof or Solution without a \qedsymbol}
+Use \verb"proof*" or \verb"solution*" which are not part of the amsthm package. The environments are defined in MIIR.cls.
+For example,
+\begin{verbatim}
+  \begin{solution*}
+    The apparent virtual mass coefficient \ldots
+  \end{solution*}
+\end{verbatim}
+produces the following:
+  \begin{solution*}
+    The apparent virtual mass coefficient \ldots
+  \end{solution*}
+
+\section{Displayed equations}
+
+The MIIR class file will insert the correct space above and below
+displayed maths if standard \LaTeX\ commands are used; 
+\verb"\[ ... \]" are recommended rather than \verb"$$ ... $$". 
+
+Do not leave blank
+lines above and below displayed equations unless a new paragraph is
+really intended. Punctuate displayed equations.
+
+\paragraph{Numbering of equations}
+
+Equations are numbered in one sequence throughout each section. If you wish to number any equations in a subsequence then use the  subequations feature of the amsmath package, as illustrated below at \eqref{subeq}.
+
+If you really insist on numbering by report then add the following line to your root file.
+\begin{verbatim}
+\renewcommand{\theequation}\arabic{equation}}
+\end{verbatim}
+Here are some examples.
+
+\begin{verbatim}
+\[
+E=Mc^2.
+\]
+\begin{equation}\label{einstein}
+E = Mc^2 .
+\end{equation}
+Here are examples of a multiline displays:
+\begin{equation}
+\left.\begin{array}{rcl}
+x &=& a+b\\
+y &=& c+d\\
+z &=& e+f.
+\end{array}\right\}
+\end{equation}
+\renewcommand{\theequation}{\arabic{equation}}
+\setcounter{equation}{0}
+\begin{eqnarray}
+x&=&a+a+b+b\nonumber\\
+&=&2a+b+b\nonumber\\
+&=&2a+2b.
+\end{eqnarray}
+\renewcommand{\theequation}{\thesection.\arabic{equation}}
+\setcounter{equation}{0}
+\begin{equation}\label{einstein2}
+E = Mc^2 .
+\end{equation}
+\begin{subequations}
+\begin{align}
+  - \nabla p + \mu\nabla^2\mathbf{u} &= 0 , \\
+  \nabla\cdot\mathbf{u} &= 0. 
+\end{align}
+\end{subequations}
+\end{verbatim}
+\[
+E=Mc^2.
+\]
+
+\begin{equation}\label{einstein}
+E = Mc^2 .
+\end{equation}
+Here are examples of a multiline displays:
+\begin{equation}
+\left.\begin{array}{rcl}
+x &=& a+b\\
+y &=& c+d\\
+z &=& e+f.
+\end{array}\right\}
+\end{equation}
+\renewcommand{\theequation}{\arabic{equation}}
+\setcounter{equation}{0}
+\begin{eqnarray}
+x&=&a+a+b+b\nonumber\\
+&=&2a+b+b\nonumber\\
+&=&2a+2b.
+\end{eqnarray}
+\renewcommand{\theequation}{\thesection.\arabic{equation}}
+\setcounter{equation}{0}
+\begin{equation}\label{einstein2}
+E = Mc^2 .
+\end{equation}
+\begin{subequations}
+\begin{align}
+  - \nabla p + \mu\nabla^2\mathbf{u} &= 0 , \label{subeq}\\
+  \nabla\cdot\mathbf{u} &= 0. 
+\end{align}
+\end{subequations}
+
+\section{Headings}
+
+\LaTeX\ provides five levels of section headings, only four of which are
+defined in the MIIR class file:
+\begin{itemize}
+  \item[] Heading A -- \verb"\section{...}"
+  \item[] Heading B -- \verb"\subsection{...}"
+  \item[] Heading C -- \verb"\subsubsection{...}"
+  \item[] Heading D -- \verb"\paragraph{...}"
+\end{itemize}
+The \verb"subparagraph" heading is not provided.
+
+
+\section{Floats}
+\subsection{Tables}
+
+The usual \verb"table" environment  produces consecutively numbered tables.
+
+Table captions should appear before the body of the table; therefore you
+should place the \verb"\caption" command before the \verb"\begin{tabular}" command.
+The \verb"\label" must follow the caption. An optional argument to \verb"\caption" provides the text used in the
+\verb"\listoftables", if any.
+
+The MIIR style dictates that vertical rules should never be used within the
+body of the table. 
+
+\subsection{Figures}
+
+Include figures using the graphicx.sty package
+ by using the following commands
+
+ \begin{verbatim}
+\begin{figure}
+\includegraphics[]{file}
+  \caption[The general picture]{An example figure illustrating the general picture.}
+  \label{sample-figure}
+\end{figure}
+\end{verbatim}
+
+Within the optional argument you can include size and orientation requirements; the main argument will include the file name.
+The caption should follow the figure; the label must follow the caption. The optional argument to \verb"\caption" is only needed if a \verb"\listoffigures" is required.  Positioning of the figure within the report is determined by the class file.
+
+\subsection{Landscape}
+ Adding
+
+ \begin{verbatim}
+  \usepackage[figuresright]{rotating}
+  \usepackage{floatpag}
+  \rotfloatpagestyle{empty}
+  \end{verbatim}
+%
+will enable wide figures (and tables) to be set as landcape as follows: 
+
+\begin{verbatim}
+\begin{sidewaysfigure}
+\centering
+\includegraphics[]{}
+\caption{Landscape figure}
+\label{sidefig}
+\end{sidewaysfigure}
+\end{verbatim}
+
+\section{Acknowledgements}
+
+Acknowledgements should appear at the close of your paper, just before
+any appendices and the list of references. Use the \verb"acknowledgement"
+or \verb"acknowledgements" environment, which will also typeset the
+unnumbered section heading.
+\begin{verbatim}
+\begin{acknowledgements}
+Thanks to A,B,C.
+\end{acknowledgements}
+\end{verbatim}
+produces
+
+\begin{acknowledgements}
+Thanks to A,B,C.
+\end{acknowledgements}
+
+
+
+
+\section{Appendices}
+
+You should use the standard  \verb"\appendix" command to place any
+Appendices -- normally, these are just before the references. This command numbers
+appendices as A, B etc., equations as (A1), (B1) etc., Figures and
+Tables numbered as A1, B1 and so on. Some examples follow the next section.
+
+\section{References}\label{refs}
+
+Reference lists consist of documents you actually cite in the text; bibliographies
+may also list items that are not actually cited so may, for example, contain further reading.
+They should be included at the end of the report.
+
+Reference lists can
+be created automatically from a bibliographic database, i.e. a \verb".bib" file, or manually; in either case
+you will need a style file to interpret the commands properly.
+We have chosen the natbib package because of its versatility. Include in the preamble the following command:
+
+\begin{verbatim}
+\usepackage[numbers]{natbib} % optional argument for numbered references
+\end{verbatim}
+
+Using natbib citation commands will mean your report can be much more easily updated and corrected, and will also mean that links can be included. 
+Refer to works cited  in the text by using the usual natbib commands:
+ a selection is provided below; there are many more. 
+
+\begin{tabular}{@{}ll@{}}
+\verb"\citep{MenshEst}"
+    & $\rightarrow\enskip$\citep{MenshEst}\\
+\verb"\citep[see][p.$\,$34]{MenshEst}"
+    & $\rightarrow\enskip$\citep[see][p.$\,$34]{MenshEst}\\
+\verb"\citep[e.g.][]{MenshEst}"
+    & $\rightarrow\enskip$\citep[e.g.][]{MenshEst}\\
+\verb"\citep[Section~2.3]{MenshEst}"
+    & $\rightarrow\enskip$\citep[Section~2.3]{MenshEst}\\
+\verb"\citep{AizenBar, MenshEst}"\\
+    & $\hspace{-70pt}\rightarrow\enskip$\citep{AizenBar, MenshEst}\\
+\verb"\cite{AizenBar, MenshEst,}"\\
+    & $\hspace{-70pt}\rightarrow\enskip$\cite{AizenBar, MenshEst}\\
+\verb"\cite{MenshEst}"
+    & $\rightarrow\enskip$\cite{MenshEst}\\
+\verb"\citealp{MenshEst}"
+    & $\rightarrow\enskip$\citealp{MenshEst}\\
+\end{tabular}
+
+Items will be appeared in a numbered list; these numbers will appear at the position of the citation command.
+
+
+
+\subsection{Automatic lists using \textsc{Bib}\upshape{\TeX}}
+You will need a \verb".bib" file, and a standard \verb".bst" file that creates a reference
+list from that. You can use either the \verb"MIIR.bst"  or \verb"plain.bst".
+Executing BibTeX on the .bib file will create a .bbl file in the correct style.
+
+
+
+\subsection{Keying in your reference list from a .bbl file}
+\label{authordatebiblio}
+
+If you are not constructing a list of references from a database, but still want automatic referencing,
+then you will need to create a .bbl file, keying entries as below.
+
+
+\begin{verbatim}
+  \begin{thebibliography}{9}
+    \expandafter\ifx\csname natexlab\endcsname\relax
+      \def\natexlab#1{#1}\fi
+    \expandafter\ifx\csname selectlanguage\endcsname\relax
+      \def\selectlanguage#1{\relax}\fi
+
+  %  \bibitem[Aizenman and Barsky, 1987]{AizenBar}
+      \bibitem{AizenBar}
+Aizenman, M., and Barsky, D.~J. 1987.
+    Sharpness of the phase transition in percolation models.
+    {\em Comm. Math. Phys.}, {\bf 108}, 489--526.
+ 
+%  \bibitem[Menshikov, 1985]{MenshEst}
+  \bibitem{MenshEst}    
+Menshikov, M.~V. 1985.
+    Estimates for percolation thresholds for lattices in {${\bf R}\sp n$}.
+    {\em Dokl. Akad. Nauk SSSR}, {\bf 284}, 36--39.
+
+\end{verbatim}
+
+For numbered references the optional argument to the \verb"\bibitem" command is not required
+but is included and commented out for illustrative purposes.
+
+
+\newcommand\strttab{\noindent\begin{tabular}{@{}p{10pc}@{}p{21pc}@{}}}
+
+\appendix
+\section{Special commands in {\mdseries\texttt{MIIR.cls}}}
+ \addtocontents{toc}{\setcounter{tocdepth}{1}}
+
+The following is a summary of the new commands, optional
+arguments and environments that have been added to the
+standard \LaTeX\ user-interface in creating the MIIR class file.
+\vspace{6pt}
+
+
+\strttab
+{\em New commands}      & \\[3pt]
+\verb"\summary"& A short description of the problem, the method and the conclusion \\
+\verb"\solution"  &similar to `Proof' but provides `Solution'.\\
+\verb"\affiliation"     & use after \verb"\author" to typeset the author
+                          affiliation(s). Do not use a \verb"\\" command
+                          in \verb"\author" to start an affiliation (as
+                          in the standard \LaTeX\ styles).\\
+\verb"\and"             & to typeset `and' before the final author's name.\\
+\verb"\ls", \verb"\ns"  & to add letterspacing after authors' names.\\
+
+\verb"\nbcite"       & works in the same way as the normal \verb"\cite"
+                       command except it doesn't put in the `[ ]'s.\\
+\end{tabular}
+
+\strttab
+{\em New environments}  & \\[3pt]
+\verb"acknowledg(e)ment(s)"  & to typeset the acknowledgments section.\\
+\verb"bottomfigure"     & for split figures and captions (on facing page).\\
+\verb"proof*, solution*"           & to typeset mathematical proofs and solutions without the
+                           terminating proofbox. \\
+\verb"studygroup"  &Study Group information\\
+\verb"communicated"  &Study Group organiser who communicated the report\\
+\verb"partner" & Name of the industry partner\\
+\verb"presenter" & Name(s) of individual(s) from the partner who proposed
+the problem\\
+\verb"team" & Names of the people who worked on the problem\\
+\verb"application" & Application area(s)\\
+\verb"tools" & Methods and models used to tackle the problem\\
+\verb"keywords" & Keywords to describe the problem\\
+\verb"MSC2020" & Two-level MSC2020 codes
+\end{tabular}
+
+
+\strttab
+{\em New optional arguments} & \\[3pt]
+\verb"[<short title>]"  & in the \verb"\title" command: to define a shorter
+                           title to be used in the running head.\\
+\verb"[<short author>]" & in the \verb"\author" command: to define a
+                           shorter version of the author names for use
+                            in the running head.\\
+\verb"[<widest label>]" & in \verb"\begin{enumerate}": to ensure the correct
+                           alignment of numbered lists with wide
+                           labels.
+\end{tabular}
+
+
+
+\subsection{Catchline commands}
+
+To be placed in the preamble:
+\begin{itemize}
+  \item \verb"\date{}" -- to set the `Communicated to MIIR' date.
+\end{itemize}
+
+\section{Footnotes}
+
+Footnotes are listed by number throughout the report. If a footnote marker falls at the bottom of a typeset page, it is possible for the
+footnote text to appear on the next page (a feature of \TeX ). Check
+for this.
+
+\section{Fonts}
+The default font is Computer Modern. Other fonts can be called through packages such as amsfonts.sty, latexsym.sty, bm.sty.
+We recommend keeping things simple.
+
+\subsection{Font sizes}
+
+The MIIR class file defines all the standard \LaTeX\ font sizes. For example:
+\begin{itemize}
+  \item \verb"\tiny" -- {\tiny This is tiny text.}
+  \item \verb"\scriptsize" -- {\scriptsize This is scriptsize text.}
+  \item \verb"\footnotesize" -- {\footnotesize This is footnotesize text.}
+  \item \verb"\small" -- {\small This is small text.}
+  \item \verb"\normalsize" -- This is normalsize text (default).
+  \item \verb"\large" -- {\large This is large text.}
+  \item \verb"\Large" -- {\Large This is Large text.}
+  \item \verb"\LARGE" -- {\LARGE This is LARGE text.}
+  \item \verb"\huge" -- {\huge This is huge text.}
+  \item \verb"\Huge" -- {\Huge This is HUGE text.}
+\end{itemize}
+%
+MIIR.cls also defines the following new sizes:
+\begin{itemize}
+  \item \verb"\abstractsize" -- {\abstractsize This is abstractsize text.}
+  \item \verb"\authorsize" -- {\authorsize This is authorsize text.}
+  \item \verb"\catchlinesize" -- {\catchlinesize This is catchlinesize text.}
+\end{itemize}
+%
+All these sizes are summarized in Table~\ref{tab:fontsizes}.
+%
+\begin{table}
+  % trick to make a ? the width of a number
+  \catcode`\?=\active \gdef?{\setbox0=\hbox{0}\hbox to\wd0{}}
+  \caption{Type sizes for \LaTeX\ size-changing commands}\label{tab:fontsizes}
+  \tabcolsep=7pt
+  \begin{tabular}{lcp{70mm}}
+    \hline\hline
+    Size & Size/Baseline & Usage\\[3pt]
+    \verb"\tiny"         &     ?5/6?    & -- \\
+    \verb"\scriptsize"   &     ?7/8?    & -- \\
+    \verb"\catchlinesize"&     ?8/9?    & title page catchline. \\
+    \verb"\authorsize"   &     ?8/10    & author affiliations and received line. \\
+    \verb"\small"        &     ?9/10    & -- \\
+    \verb"\footnotesize" &     ?9/11    & footnotes, figure captions,
+                                          bibliography, tables and quotes/extracts. \\
+    \verb"\abstractsize" &     ?9/12    & report summary/abstract. \\
+    \verb"\normalsize"   &     10/13    & main text size, A,~B,~C and D headings,
+                                          author names and table captions. \\
+    \verb"\large"        &     11/13    & part number (parts are not normally used). \\
+    \verb"\Large"        &     14/18    & -- \\
+    \verb"\LARGE"        &    17/21
+                                        & report title and part title. \\
+    \verb"\huge"         &     20/25    & -- \\
+    \verb"\Huge"         &     25/30    & -- \\
+    \hline\hline
+  \end{tabular}
+\end{table}
+
+
+
+   \begin{thebibliography}{9}
+    \expandafter\ifx\csname natexlab\endcsname\relax
+      \def\natexlab#1{#1}\fi
+    \expandafter\ifx\csname selectlanguage\endcsname\relax
+      \def\selectlanguage#1{\relax}\fi
+      
+  %  \bibitem[Aizenman and Barsky, 1987]{AizenBar}
+ \bibitem{AizenBar}
+Aizenman, M., and Barsky, D.~J. 1987.
+    Sharpness of the phase transition in percolation models.
+    {\em Comm. Math. Phys.}, {\bf 108}, 489--526.
+  
+%    \bibitem[Menshikov, 1985]{MenshEst}
+\bibitem{MenshEst}
+Menshikov, M.~V. 1985.
+    Estimates for percolation thresholds for lattices in {${\bf R}\sp n$}.
+    {\em Dokl. Akad. Nauk SSSR}, {\bf 284}, 36--39.
+  \end{thebibliography}
+
+
+\label{lastpage}
+
+\end{document}
