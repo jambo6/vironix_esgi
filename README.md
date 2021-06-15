@@ -1,4 +1,4 @@
-# Vironx - Vermont ESGI 2021
+# Vironix - Vermont ESGI 2021
 
 This project contains code for the Vironix Vermont ESGI study group.
 
